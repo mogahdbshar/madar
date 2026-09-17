@@ -1,0 +1,2 @@
+import 'package:flutter/material.dart';
+class SettingsPage extends StatelessWidget {const SettingsPage({super.key});@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:const Text('الإعدادات')),body:ListView(children:const [ListTile(title:Text('المظهر'),subtitle:Text('الوضع الفاتح والداكن والنظام')),ListTile(title:Text('الصلاحيات'),subtitle:Text('شرح كل صلاحية قبل طلبها')),ListTile(title:Text('المحتوى'),subtitle:Text('إصدارات الحزم والمصادر والتحقق')),ListTile(title:Text('الخصوصية'),subtitle:Text('البيانات المحلية واستخدام الموقع والإشعارات'))]));}}
