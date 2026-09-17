@@ -1,0 +1,3 @@
+import 'package:flutter/material.dart';
+class TasbeehPage extends StatefulWidget {const TasbeehPage({super.key});@override State<TasbeehPage> createState()=>_TasbeehState();}
+class _TasbeehState extends State<TasbeehPage>{int count=0;@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:const Text('التسبيح')),body:Center(child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Text('$count',style:Theme.of(c).textTheme.displayLarge),const SizedBox(height:20),FilledButton(onPressed:()=>setState(()=>count++),child:const Text('تسبيح')),TextButton(onPressed:()=>setState(()=>count=0),child:const Text('تصفير'))]));}}
