@@ -1,0 +1,33 @@
+name: MADAR Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Build target'
+        required: true
+        default: 'android'
+        type: choice
+        options: [android]
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'apk'
+        type: choice
+        options: [apk, appbundle]
+
+jobs:
+  android:
+    if: inputs.platform == 'android'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build ${{ inputs.build_type }}
