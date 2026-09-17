@@ -42,6 +42,26 @@ class QuranAyahs extends Table {
   @override Set<Column<Object>> get primaryKey => {id};
 }
 
+class QuranTranslations extends Table {
+  TextColumn get id => text()();
+  TextColumn get ayahId => text()();
+  TextColumn get language => text()();
+  TextColumn get translator => text()();
+  TextColumn get text => text()();
+  TextColumn get sourceId => text()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
+class TafsirEntries extends Table {
+  TextColumn get id => text()();
+  TextColumn get ayahId => text()();
+  TextColumn get scholar => text()();
+  TextColumn get book => text()();
+  TextColumn get text => text()();
+  TextColumn get sourceId => text()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
 class HadithCollections extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
@@ -80,6 +100,43 @@ class Adhkar extends Table {
   @override Set<Column<Object>> get primaryKey => {id};
 }
 
+class DuaEntries extends Table {
+  TextColumn get id => text()();
+  TextColumn get category => text()();
+  TextColumn get originalText => text()();
+  TextColumn get sourceId => text()();
+  TextColumn get sourceReference => text()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
+class NamesOfAllah extends Table {
+  TextColumn get id => text()();
+  TextColumn get arabicName => text()();
+  TextColumn get meaning => text()();
+  TextColumn get explanation => text().nullable()();
+  TextColumn get sourceId => text()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
+class LibraryItems extends Table {
+  TextColumn get id => text()();
+  TextColumn get title => text()();
+  TextColumn get category => text()();
+  TextColumn get author => text().nullable()();
+  TextColumn get content => text()();
+  TextColumn get sourceId => text()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
+class AudioTracks extends Table {
+  TextColumn get id => text()();
+  TextColumn get title => text()();
+  TextColumn get uri => text()();
+  TextColumn get sourceId => text()();
+  TextColumn get license => text()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
 class Bookmarks extends Table {
   TextColumn get id => text()();
   TextColumn get contentType => text()();
@@ -88,10 +145,20 @@ class Bookmarks extends Table {
   @override Set<Column<Object>> get primaryKey => {id};
 }
 
+class Notes extends Table {
+  TextColumn get id => text()();
+  TextColumn get contentType => text()();
+  TextColumn get contentId => text()();
+  TextColumn get text => text()();
+  DateTimeColumn get updatedAt => dateTime()();
+  @override Set<Column<Object>> get primaryKey => {id};
+}
+
 class ReadingProgress extends Table {
   TextColumn get id => text()();
   TextColumn get contentType => text()();
   TextColumn get contentId => text()();
+  IntColumn get position => integer().withDefault(const Constant(0))();
   DateTimeColumn get updatedAt => dateTime()();
   @override Set<Column<Object>> get primaryKey => {id};
 }
@@ -104,20 +171,19 @@ class WorshipEntries extends Table {
   @override Set<Column<Object>> get primaryKey => {id};
 }
 
+class AppSettings extends Table {
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+  @override Set<Column<Object>> get primaryKey => {key};
+}
+
 @DriftDatabase(tables: [
-  ContentSources,
-  ContentPackages,
-  QuranSurahs,
-  QuranAyahs,
-  HadithCollections,
-  HadithEntries,
-  HadithGradings,
-  Adhkar,
-  Bookmarks,
-  ReadingProgress,
-  WorshipEntries,
+  ContentSources, ContentPackages, QuranSurahs, QuranAyahs,
+  QuranTranslations, TafsirEntries, HadithCollections, HadithEntries,
+  HadithGradings, Adhkar, DuaEntries, NamesOfAllah, LibraryItems,
+  AudioTracks, Bookmarks, Notes, ReadingProgress, WorshipEntries, AppSettings,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
-  @override int get schemaVersion => 1;
+  @override int get schemaVersion => 2;
 }
