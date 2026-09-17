@@ -23,4 +23,7 @@ class ContentValidator {
       return false;
     }
   }
+
+  static bool matchesSha256(List<int> bytes, String expected) =>
+      sha256OfBytes(bytes).toLowerCase() == expected.trim().toLowerCase();
 }
