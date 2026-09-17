@@ -1,2 +1,14 @@
 import 'package:flutter/material.dart';
-class NamesPage extends StatelessWidget { const NamesPage({super.key}); @override Widget build(BuildContext c) => const Scaffold(body: Center(child: Text('أسماء الله الحسنى'))); }
+import '../../../core/design_system/madar_ui.dart';
+
+class NamesPage extends StatelessWidget {
+  const NamesPage({super.key});
+  @override Widget build(BuildContext context) => MadarPage(title: 'أسماء الله الحسنى', child: ListView(padding: const EdgeInsets.all(18), children: const [
+    MadarGlassCard(child: ListTile(leading: Icon(Icons.auto_awesome_rounded), title: Text('الأسماء ومعانيها'), subtitle: Text('المعنى والشرح والمصدر عند الحاجة'))),
+    SizedBox(height: 18),
+    MadarFeatureTile(icon: Icons.search_rounded, title: 'البحث', subtitle: 'ابحث في الأسماء والمعاني', onTap: _noop),
+    SizedBox(height: 10),
+    MadarFeatureTile(icon: Icons.favorite_border_rounded, title: 'المفضلة', subtitle: 'حفظ الأسماء للرجوع إليها', onTap: _noop),
+  ]));
+}
+void _noop() {}
