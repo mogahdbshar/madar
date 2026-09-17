@@ -15,4 +15,4 @@
 - دعم RTL والعربية بجودة عالية.
 - Offline-first للوظائف والمحتوى الأساسي.
 
-راجع `docs/MADAR_PROJECT_SPECIFICATION.md` للتوثيق المرجعي للمشروع.
+راجع `docs/MADAR_PROJECT_SPECIFICATION_AR.md` للتوثيق المرجعي للمشروع.
