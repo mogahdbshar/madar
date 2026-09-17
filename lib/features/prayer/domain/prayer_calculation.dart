@@ -10,23 +10,22 @@ enum PrayerCalculationMethod {
   other,
 }
 
-enum AsrJuristicMethod {
-  standard,
-  hanafi,
-}
+enum AsrJuristicMethod { standard, hanafi }
+
+enum HighLatitudeRule { middleOfTheNight, seventhOfTheNight, angleBased }
 
 class PrayerCalculationSettings {
   const PrayerCalculationSettings({
     this.method = PrayerCalculationMethod.muslimWorldLeague,
     this.asrMethod = AsrJuristicMethod.standard,
-    this.highLatitudeRule = 'middleOfTheNight',
+    this.highLatitudeRule = HighLatitudeRule.middleOfTheNight,
     this.fajrAngle = 18,
     this.ishaAngle = 17,
   });
 
   final PrayerCalculationMethod method;
   final AsrJuristicMethod asrMethod;
-  final String highLatitudeRule;
+  final HighLatitudeRule highLatitudeRule;
   final double fajrAngle;
   final double ishaAngle;
 }
