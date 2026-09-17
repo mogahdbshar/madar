@@ -18,8 +18,7 @@ class ContentValidator {
 
   static bool isValidJsonPackage(String raw) {
     try {
-      final value = jsonDecode(raw);
-      return value is Map<String, dynamic>;
+      return jsonDecode(raw) is Map<String, dynamic>;
     } catch (_) {
       return false;
     }
