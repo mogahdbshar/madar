@@ -1,6 +1,4 @@
 class QuranSurah {
-  const QuranSurah({required this.number, required this.name, required this.ayahCount});
-  final int number;
-  final String name;
-  final int ayahCount;
+  const QuranSurah({required this.number, required this.nameArabic, required this.nameLatin, required this.ayahCount});
+  final int number; final String nameArabic; final String nameLatin; final int ayahCount;
 }
