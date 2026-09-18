@@ -48,6 +48,7 @@ class MadarShell extends StatefulWidget {
   final Widget child;
   @override State<MadarShell> createState() => _MadarShellState();
 }
+
 class _MadarShellState extends State<MadarShell> {
   int index = 0;
   @override Widget build(BuildContext context) => Scaffold(
@@ -55,8 +56,8 @@ class _MadarShellState extends State<MadarShell> {
     bottomNavigationBar: NavigationBar(
       selectedIndex: index,
       onDestinationSelected: (value) {
-        setState(() => index = value);
         if (value == 4) { _openMore(context); return; }
+        setState(() => index = value);
         const routes = ['/', '/quran', '/hadith', '/adhkar'];
         context.go(routes[value]);
       },
@@ -68,5 +69,28 @@ class _MadarShellState extends State<MadarShell> {
         NavigationDestination(icon: Icon(Icons.grid_view_rounded), label: 'المزيد'),
       ],
     ),
+  );
+
+  void _openMore(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (_) => SafeArea(child: Wrap(children: [
+        _tile(context, 'الصلاة', Icons.access_time_rounded, '/prayer'),
+        _tile(context, 'القبلة', Icons.explore_rounded, '/qibla'),
+        _tile(context, 'التقويم الإسلامي', Icons.calendar_month_rounded, '/calendar'),
+        _tile(context, 'أسماء الله', Icons.auto_awesome_rounded, '/names'),
+        _tile(context, 'التسبيح', Icons.radio_button_checked_rounded, '/tasbeeh'),
+        _tile(context, 'الحج والعمرة', Icons.mosque_rounded, '/hajj-umrah'),
+        _tile(context, 'المكتبة', Icons.local_library_rounded, '/library'),
+        _tile(context, 'الصوت', Icons.headphones_rounded, '/audio'),
+        _tile(context, 'الإعدادات', Icons.settings_rounded, '/settings'),
+      ])),
+    );
+  }
+
+  Widget _tile(BuildContext context, String title, IconData icon, String route) => ListTile(
+    leading: Icon(icon), title: Text(title),
+    onTap: () { Navigator.pop(context); context.push(route); },
   );
 }
