@@ -49,7 +49,7 @@ class _PrayerState extends State<PrayerPage> {
         latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180;
     final times = hasLocation
         ? const PrayerCalculator().calculate(
-            date: now, latitude: latitude!, longitude: longitude!, timeZoneOffsetHours: 3,
+            date: now, latitude: latitude!, longitude: longitude!, timeZoneOffsetHours: DateTime.now().timeZoneOffset.inMinutes / 60,
             settings: const PrayerCalculationSettings(
               method: PrayerCalculationMethod.muslimWorldLeague,
             ),
