@@ -21,7 +21,7 @@ class _SearchState extends ConsumerState<SearchPage> {
         error: (e, _) => Text('تعذر البحث: ' + e.toString()),
         data: (items) {
           if (items.isEmpty) return const Text('لا توجد نتائج في المحتوى المثبت.');
-          return Column(children: items.map((r) => Card(child: ListTile(title: Text(r.title), subtitle: Text(r.snippet, maxLines: 3, overflow: TextOverflow.ellipsis), leading: Text(r.type)))).toList());
+          return Column(children: [for (final r in items) Card(child: ListTile(title: Text(r.title), subtitle: Text(r.snippet, maxLines: 3, overflow: TextOverflow.ellipsis), leading: Text(r.type)))]);
         },
       ),
     ]),
