@@ -121,7 +121,6 @@ class _State extends State<QiblaPage> {
     final a = double.tryParse(lat.text);
     final o = double.tryParse(lon.text);
     if (a == null || o == null) { qiblaStream = null; return; }
-    qiblaStream = const QiblaSensorService().stream(latitude: 0, longitude: 0);
     qiblaStream = QiblaSensorService().stream(latitude: a, longitude: o);
   }
 
