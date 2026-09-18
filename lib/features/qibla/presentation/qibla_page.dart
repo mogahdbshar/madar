@@ -23,7 +23,7 @@ class _State extends State<QiblaPage> {
         ]),
         const SizedBox(height:12),
         if(valid) StreamBuilder<QiblaReading>(
-          stream:const QiblaSensorService().stream(latitude:12.7855,longitude:45.0187),
+          stream:QiblaSensorService().stream(latitude:latitude!,longitude:longitude!),
           builder:(context,snapshot){
             final r=snapshot.data;
             if(r==null)return const Column(children:[Icon(Icons.explore_rounded,size:150),Text('بانتظار حساس الاتجاه...')]);
