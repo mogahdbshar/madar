@@ -7,7 +7,7 @@ class QiblaReading {
   const QiblaReading({required this.heading, required this.qiblaBearing});
   final double heading;
   final double qiblaBearing;
-  double get relative => QiblaMath.shortestAngularDifference(heading, qiblaBearing);
+  double get relative => QiblaMath.shortestAngularDifference(qiblaBearing, heading);
 }
 
 class QiblaSensorService {
@@ -27,7 +27,7 @@ class QiblaSensorService {
       final xh=m.x*math.cos(pitch)+m.z*math.sin(pitch);
       final yh=m.x*math.sin(roll)*math.sin(pitch)+m.y*math.cos(roll)-m.z*math.sin(roll)*math.cos(pitch);
       final heading=(math.atan2(yh,xh)*180/math.pi+360)%360;
-      controller.add(QiblaReading(heading:heading,qiblaBearing:QiblaMath.bearingToKaaba(latitude,longitude)));
+      controller.add(QiblaReading(heading:heading,qiblaBearing:QiblaMath.bearingToMakkah(latitude: latitude, longitude: longitude)));
     }
     final s1=accelerometerEvents.listen((e){accel=e;emit();});
     final s2=magnetometerEvents.listen((e){mag=e;emit();});
