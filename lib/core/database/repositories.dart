@@ -13,7 +13,8 @@ import '../../features/worship_tracking/domain/worship_repository.dart';
 class DriftQuranRepository implements QuranRepository {
   DriftQuranRepository(this.db); final AppDatabase db;
   @override Future<List<QuranSurah>> getSurahs() async { final rows=await db.select(db.quranSurahs).get(); return rows.map((r)=>QuranSurah(number:r.number,nameArabic:r.nameArabic,nameLatin:r.nameLatin,ayahCount:r.ayahCount)).toList(); }
-  @override Future<String> getAyah(QuranReference reference) async { final row=await (db.select(db.quranAyahs)..where((t)=>t.surahNumber.equals(reference.surahNumber)&t.ayahNumber.equals(reference.ayahNumber))).getSingleOrNull(); if(row==null) throw StateError('الآية غير موجودة في المحتوى المحلي.'); return row.originalText; }\n  @override Future<List<QuranAyah>> getAyahs(int surahNumber) async { final rows=await (db.select(db.quranAyahs)..where((t)=>t.surahNumber.equals(surahNumber))).get(); return rows.map((r)=>QuranAyah(id:r.id,surahNumber:r.surahNumber,ayahNumber:r.ayahNumber,text:r.originalText)).toList(); }
+  @override Future<String> getAyah(QuranReference reference) async { final row=await (db.select(db.quranAyahs)..where((t)=>t.surahNumber.equals(reference.surahNumber)&t.ayahNumber.equals(reference.ayahNumber))).getSingleOrNull(); if(row==null) throw StateError('الآية غير موجودة في المحتوى المحلي.'); return row.originalText; }
+  @override Future<List<QuranAyah>> getAyahs(int surahNumber) async { final rows=await (db.select(db.quranAyahs)..where((t)=>t.surahNumber.equals(surahNumber))).get(); return rows.map((r)=>QuranAyah(id:r.id,surahNumber:r.surahNumber,ayahNumber:r.ayahNumber,text:r.originalText)).toList(); }
 }
 class DriftHadithRepository implements HadithRepository {
   DriftHadithRepository(this.db); final AppDatabase db;
