@@ -26,14 +26,11 @@ void main() async {
   final ayahs = <Map<String,dynamic>>[];
   for (final line in lines) {
     final p = line.split('|');
-    if (p.length < 2) continue;
-    final key = p.first.trim();
-    final c = key.indexOf(':');
-    if (c <= 0) continue;
-    final s = int.tryParse(key.substring(0,c));
-    final a = int.tryParse(key.substring(c+1));
+    if (p.length < 3) continue;
+    final s = int.tryParse(p[0].trim());
+    final a = int.tryParse(p[1].trim());
     if (s == null || a == null) continue;
-    ayahs.add({'id': '$s:$a', 'surahNumber': s, 'ayahNumber': a, 'text': p.sublist(1).join('|'), 'sourceId': 'tanzil-quran-v1.1'});
+    ayahs.add({'id': '$s:$a', 'surahNumber': s, 'ayahNumber': a, 'text': p.sublist(2).join('|'), 'sourceId': 'tanzil-quran-v1.1'});
   }
   if (ayahs.length != 6236) throw StateError('Quran validation failed: ' + ayahs.length.toString());
   if (metadata.length != 114) throw StateError('Surah metadata validation failed.');
