@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
         MadarGlassCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('اليوم', style: Theme.of(context).textTheme.labelLarge), const SizedBox(height: 6),
           Text('الصلاة القادمة', style: Theme.of(context).textTheme.titleLarge), const SizedBox(height: 4),
-          const Text('اختر موقعك أو مدينة يدوية لعرض المواقيت'), const SizedBox(height: 14),
+          const Text('اختر موقعك أو أدخل مدينة يدوياً لعرض المواقيت'), const SizedBox(height: 14),
           FilledButton.tonalIcon(onPressed: () => context.push('/prayer'), icon: const Icon(Icons.access_time_rounded), label: const Text('مواقيت الصلاة')),
         ])),
         const SizedBox(height: 18),
