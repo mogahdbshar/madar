@@ -29,8 +29,8 @@ class QiblaSensorService {
       final heading=(math.atan2(yh,xh)*180/math.pi+360)%360;
       controller.add(QiblaReading(heading:heading,qiblaBearing:QiblaMath.bearingToMakkah(latitude: latitude, longitude: longitude)));
     }
-    final s1=accelerometerEvents.listen((e){accel=e;emit();});
-    final s2=magnetometerEvents.listen((e){mag=e;emit();});
+    final s1=accelerometerEventStream().listen((e){accel=e;emit();});
+    final s2=magnetometerEventStream().listen((e){mag=e;emit();});
     controller.onCancel=(){s1.cancel();s2.cancel();};
     return controller.stream;
   }
