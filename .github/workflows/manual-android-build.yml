@@ -27,7 +27,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y imagemagick
 
       - name: Rasterize MADAR icon
-        run: magick assets/branding/madar_icon.svg -background none assets/branding/madar_icon.png
+        run: convert assets/branding/madar_icon.svg -background none assets/branding/madar_icon.png
 
       - name: Flutter pub get
         run: flutter pub get
