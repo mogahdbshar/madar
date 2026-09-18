@@ -8,17 +8,17 @@ on:
         required: true
         default: 'android'
         type: choice
-        options: [android]
+        options: [android, ios]
       build_type:
-        description: 'Build type'
+        description: 'Android: apk/appbundle. iOS: ios'
         required: true
         default: 'apk'
         type: choice
-        options: [apk, appbundle]
+        options: [apk, appbundle, ios]
 
 jobs:
   android:
-    if: inputs.platform == 'android'
+    if: ${{ inputs.platform == 'android' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
         with:
           channel: stable
           cache: true
-      - name: Generate platform scaffolding when absent
+      - name: Generate Android scaffolding when absent
         run: |
           if [ ! -d android ]; then flutter create --platforms=android --org com.madar .; fi
       - run: flutter pub get
@@ -38,3 +38,39 @@ jobs:
         with:
           name: madar-${{ inputs.build_type }}
           path: build/app/outputs/**/*
+
+  ios:
+    if: ${{ inputs.platform == 'ios' }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate iOS scaffolding when absent
+        run: |
+          if [ ! -d ios ]; then flutter create --platforms=ios --org com.madar .; fi
+      - name: Configure iOS permission descriptions
+        run: |
+          /usr/libexec/PlistBuddy -c "Add :NSLocationWhenInUseUsageDescription string MADAR uses your location only for prayer times and Qibla when you choose." ios/Runner/Info.plist || true
+      - name: Configure permission_handler iOS macros
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("ios/Podfile")
+          s=p.read_text()
+          marker="flutter_additional_ios_build_settings(target)"
+          if "PERMISSION_LOCATION_WHENINUSE=1" not in s:
+              s=s.replace(marker, marker+"\n      target.build_configurations.each do |config|\n        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'PERMISSION_LOCATION_WHENINUSE=1', 'PERMISSION_NOTIFICATIONS=1']\n      end")
+              p.write_text(s)
+          PY
+      - run: flutter pub get
+      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build ios --no-codesign
+      - uses: actions/upload-artifact@v4
+        with:
+          name: madar-ios
+          path: build/ios/iphoneos/Runner.app
