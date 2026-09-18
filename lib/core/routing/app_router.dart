@@ -56,7 +56,8 @@ class _MadarShellState extends State<MadarShell> {
       selectedIndex: index,
       onDestinationSelected: (value) {
         setState(() => index = value);
-        const routes = ['/', '/quran', '/hadith', '/adhkar', '/worship'];
+        if (value == 4) { _openMore(context); return; }
+        const routes = ['/', '/quran', '/hadith', '/adhkar'];
         context.go(routes[value]);
       },
       destinations: const [
