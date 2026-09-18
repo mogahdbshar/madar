@@ -29,6 +29,18 @@ jobs:
       - name: Generate Android scaffolding when absent
         run: |
           if [ ! -d android ]; then flutter create --platforms=android --org com.madar .; fi
+      - name: Configure Android notification desugaring
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('android/app/build.gradle.kts')
+          s=p.read_text()
+          if 'isCoreLibraryDesugaringEnabled = true' not in s:
+              s=s.replace('compileOptions {', 'compileOptions {\n        isCoreLibraryDesugaringEnabled = true')
+          if 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")' not in s:
+              s=s.replace('dependencies {', 'dependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")')
+          p.write_text(s)
+          PY
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs
       - run: flutter analyze
