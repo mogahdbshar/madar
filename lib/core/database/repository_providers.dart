@@ -1,0 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'app_database.dart';
+import 'database_provider.dart';
+import 'repositories.dart';
+import '../../features/quran/domain/quran_repository.dart';
+import '../../features/hadith/domain/hadith_repository.dart';
+import '../../features/adhkar/domain/dhikr_repository.dart';
+import '../../features/worship_tracking/domain/worship_repository.dart';
+
+final quranRepositoryProvider=Provider<QuranRepository>((ref)=>DriftQuranRepository(ref.watch(appDatabaseProvider)));
+final hadithRepositoryProvider=Provider<HadithRepository>((ref)=>DriftHadithRepository(ref.watch(appDatabaseProvider)));
+final dhikrRepositoryProvider=Provider<DhikrRepository>((ref)=>DriftDhikrRepository(ref.watch(appDatabaseProvider)));
+final worshipRepositoryProvider=Provider<WorshipRepository>((ref)=>DriftWorshipRepository(ref.watch(appDatabaseProvider)));
