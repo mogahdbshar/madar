@@ -12,21 +12,22 @@ class PrayerCalculator {
     required double timeZoneOffsetHours,
     PrayerCalculationSettings settings = const PrayerCalculationSettings(),
   }) {
+    final effective = _settingsFor(settings);
     final julian = _julian(date.toUtc());
     final declination = _sunDeclination(julian);
     final equation = _equationOfTime(julian);
     final noon = 12 + timeZoneOffsetHours - longitude / 15 - equation / 60;
 
     final fajr = _sunAngleTime(
-      settings.fajrAngle, latitude, declination, noon, true,
+      effective.fajrAngle, latitude, declination, noon, true,
     );
     final sunrise = _sunAngleTime(0.833, latitude, declination, noon, true);
     final dhuhr = noon;
-    final asrFactor = settings.asrMethod == AsrJuristicMethod.hanafi ? 2.0 : 1.0;
+    final asrFactor = effective.asrMethod == AsrJuristicMethod.hanafi ? 2.0 : 1.0;
     final asr = _asrTime(asrFactor, latitude, declination, noon);
     final sunset = _sunAngleTime(0.833, latitude, declination, noon, false);
     final isha = _sunAngleTime(
-      settings.ishaAngle, latitude, declination, noon, false,
+      effective.ishaAngle, latitude, declination, noon, false,
     );
 
     final base = DateTime(date.year, date.month, date.day);
@@ -95,6 +96,20 @@ class PrayerCalculator {
   DateTime _atLocal(DateTime base, double hours) {
     final minutes = (hours * 60).round();
     return base.add(Duration(minutes: minutes));
+  }
+
+  PrayerCalculationSettings _settingsFor(PrayerCalculationSettings s) {
+    switch(s.method){
+      case PrayerCalculationMethod.muslimWorldLeague:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:18,ishaAngle:17);
+      case PrayerCalculationMethod.egyptian:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:19.5,ishaAngle:17.5);
+      case PrayerCalculationMethod.karachi:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:18,ishaAngle:18);
+      case PrayerCalculationMethod.ummAlQura:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:18.5,ishaAngle:0);
+      case PrayerCalculationMethod.dubai:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:18.2,ishaAngle:18.2);
+      case PrayerCalculationMethod.moonsightingCommittee:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:18,ishaAngle:18);
+      case PrayerCalculationMethod.northAmerica:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:15,ishaAngle:15);
+      case PrayerCalculationMethod.tehran:return PrayerCalculationSettings(method:s.method,asrMethod:s.asrMethod,highLatitudeRule:s.highLatitudeRule,fajrAngle:17.7,ishaAngle:14);
+      case PrayerCalculationMethod.other:return s;
+    }
   }
 
   double _rad(double d) => d * math.pi / 180;
