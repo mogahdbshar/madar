@@ -15,6 +15,7 @@ class _State extends State<QiblaPage> {
   final lon = TextEditingController();
   bool loading = false;
   String? error;
+  Stream<QiblaReading>? qiblaStream;
 
   @override
   void dispose() { lat.dispose(); lon.dispose(); super.dispose(); }
@@ -30,6 +31,7 @@ class _State extends State<QiblaPage> {
       );
       lat.text = p.latitude.toStringAsFixed(6);
       lon.text = p.longitude.toStringAsFixed(6);
+      _refreshStream();
     } catch (e) {
       error = e.toString();
     } finally {
@@ -58,7 +60,7 @@ class _State extends State<QiblaPage> {
                   controller: lat,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
                   decoration: const InputDecoration(labelText: 'خط العرض'),
-                  onChanged: (_) => setState(() {}),
+                  onChanged: (_) { _refreshStream(); setState(() {}); },
                 )),
                 const SizedBox(width: 10),
                 Expanded(child: TextField(
@@ -85,7 +87,7 @@ class _State extends State<QiblaPage> {
             const MadarGlassCard(child: Text('أدخل الإحداثيات أو استخدم الموقع لبدء البوصلة.'))
           else
             StreamBuilder<QiblaReading>(
-              stream: QiblaSensorService().stream(latitude: latitude!, longitude: longitude!),
+              stream: qiblaStream,
               builder: (context, snapshot) {
                 final reading = snapshot.data;
                 if (reading == null) {
@@ -113,6 +115,14 @@ class _State extends State<QiblaPage> {
         ],
       ),
     );
+  }
+
+  void _refreshStream() {
+    final a = double.tryParse(lat.text);
+    final o = double.tryParse(lon.text);
+    if (a == null || o == null) { qiblaStream = null; return; }
+    qiblaStream = const QiblaSensorService().stream(latitude: 0, longitude: 0);
+    qiblaStream = QiblaSensorService().stream(latitude: a, longitude: o);
   }
 
   double _bearing(double latitude, double longitude) {
