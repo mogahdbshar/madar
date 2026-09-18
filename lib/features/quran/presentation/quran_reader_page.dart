@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/database/database_provider.dart';
 import '../../../core/database/repository_providers.dart';
 import '../../../core/design_system/madar_ui.dart';
 import '../domain/quran_models.dart';
