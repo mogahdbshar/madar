@@ -1,9 +1,4 @@
 class QuranReference {
-  const QuranReference({
-    required this.surah,
-    required this.ayah,
-  });
-
-  final int surah;
-  final int ayah;
+  const QuranReference({required this.surahNumber, required this.ayahNumber});
+  final int surahNumber; final int ayahNumber;
 }
