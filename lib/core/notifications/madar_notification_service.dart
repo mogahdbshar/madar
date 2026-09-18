@@ -1,9 +1,12 @@
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MadarNotificationService {
   MadarNotificationService({FlutterLocalNotificationsPlugin? plugin}):plugin=plugin??FlutterLocalNotificationsPlugin();
   final FlutterLocalNotificationsPlugin plugin;
   Future<void> initialize() async {
+    tz.initializeTimeZones();
     const settings=InitializationSettings(android:AndroidInitializationSettings('@mipmap/ic_launcher'),iOS:DarwinInitializationSettings());
     await plugin.initialize(settings);
   }
@@ -24,6 +27,6 @@ class MadarNotificationService {
     const details=NotificationDetails(
       android:AndroidNotificationDetails('madar_scheduled','تنبيهات مَدار المجدولة',channelDescription:'تنبيهات يختارها المستخدم',importance:Importance.high,priority:Priority.high),
       iOS:DarwinNotificationDetails());
-    await plugin.zonedSchedule(id:id,title:title,body:body,scheduledDate:TZDateTime.from(dateTime,local),notificationDetails:details,androidScheduleMode:AndroidScheduleMode.inexactAllowWhileIdle);
+    await plugin.zonedSchedule(id:id,title:title,body:body,scheduledDate:TZDateTime.from(dateTime,tz.local),notificationDetails:details,androidScheduleMode:AndroidScheduleMode.inexactAllowWhileIdle);
   }
 }
