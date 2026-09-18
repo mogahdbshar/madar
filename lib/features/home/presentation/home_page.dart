@@ -25,7 +25,8 @@ class HomePage extends StatelessWidget {
           MadarFeatureTile(icon: Icons.auto_awesome_rounded, title: 'التسبيح', subtitle: 'جلسة عداد تحفظ تقدمك محلياً', onTap: () => context.push('/tasbeeh')),
         ])),
       ])),
-    ])),
+    ]),
+  ),
   );
 }
 class _Quick extends StatelessWidget {
