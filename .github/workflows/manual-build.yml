@@ -58,7 +58,12 @@ jobs:
               s=s.replace('dependencies {', 'dependencies {\n    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")')
           p.write_text(s)
           PY
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+      - name: Rasterize MADAR icon
+        run: magick assets/branding/madar_icon.svg -background none assets/branding/madar_icon.png
       - run: flutter pub get
+      - run: dart run flutter_launcher_icons
       - name: Prepare verified Quran content
         run: dart run tool/prepare_content.dart
       - run: dart run build_runner build --delete-conflicting-outputs
@@ -100,7 +105,12 @@ jobs:
               s=s.replace(marker, marker+"\n      target.build_configurations.each do |config|\n        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'PERMISSION_LOCATION_WHENINUSE=1', 'PERMISSION_NOTIFICATIONS=1']\n      end")
               p.write_text(s)
           PY
+      - name: Install ImageMagick
+        run: brew install imagemagick
+      - name: Rasterize MADAR icon
+        run: magick assets/branding/madar_icon.svg -background none assets/branding/madar_icon.png
       - run: flutter pub get
+      - run: dart run flutter_launcher_icons
       - name: Prepare verified Quran content
         run: dart run tool/prepare_content.dart
       - run: dart run build_runner build --delete-conflicting-outputs
