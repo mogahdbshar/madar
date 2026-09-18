@@ -1,38 +1,33 @@
-# MADAR Implementation Status
+# حالة تنفيذ مَدار
 
-## Foundation
-- [x] Repository and project documentation
-- [x] Flutter dependency manifest
-- [x] Core routing/theme scaffolding
-- [x] Drift database schema foundation
-- [x] Content provenance and package integrity primitives
-- [x] Feature/domain boundaries
-- [x] Permission explanation catalog
-- [x] Qibla bearing mathematics + tests
-- [x] Location/sensor/notification/audio dependency foundations
-- [x] Manual-only Android build workflow
-- [x] Initial home shell
+## قاعدة الحالة
+وجود شاشة أو Route لا يعني اكتمال الميزة. الميزة لا تُعد مكتملة إلا بعد تنفيذ منطقها، ربط البيانات، معالجة الأخطاء والاختبارات المطلوبة.
 
-## In progress
-- [ ] Generated Android platform project
-- [ ] Native Android permission adapters
-- [ ] Native iOS platform project
-- [ ] Native iOS permission adapters
-- [ ] Real prayer calculation engine
-- [ ] Qibla sensor fusion/calibration
-- [ ] Content ingestion and package installer
-- [ ] Verified Quran dataset import
-- [ ] Hadith collections + provenance/grading import
-- [ ] Adhkar/dua/Names datasets
-- [ ] Tafsir/translation licensing and import
-- [ ] FTS5 unified search
-- [ ] Audio playback/background controls
-- [ ] Full feature navigation and screens
-- [ ] Hajj/Umrah guided mode
-- [ ] Calendar engine
-- [ ] Worship tracking persistence
-- [ ] Bookmarks/notes persistence
-- [ ] Integration tests
-- [ ] Release signing
+## المنجز في الأساس
+- هوية المشروع: مَدار | MADAR.
+- معرف التطبيق: com.madar.app.
+- Flutter/Dart + Riverpod + GoRouter + Drift.
+- مخطط قاعدة بيانات المحتوى والمصادر.
+- نظام manifest والتحقق SHA-256 والأساس الخاص بالمصدر والترخيص.
+- أساس حساب مواقيت الصلاة.
+- أساس حساب اتجاه القبلة.
+- أساس الصلاحيات مع شرحها.
+- Design System أولي وواجهة زجاجية.
+- Routes وواجهات أولية لجميع أقسام المنتج.
+- GitHub Actions للبناء اليدوي فقط.
 
-A feature is only marked complete when implementation and verification exist. A placeholder screen does not count as completion.
+## قيد معروف
+- بيانات القرآن والحديث والتفسير والأذكار والمكتبة والصوت لم تُدرج بعد كحزم رسمية؛ لأن إدخالها يتطلب اختيار مصدر موثوق ومراجعة الترخيص والتحقق من البيانات.
+- حساب مواقيت الصلاة الحالي أساس حسابي ويحتاج مقارنة منهجية مع مراجع موثوقة قبل اعتباره إنتاجياً.
+- القبلة تحتاج ربط حساس البوصلة والموقع وواجهة معايرة حقيقية.
+- الإشعارات والصوت والتنزيلات تحتاج تكامل المنصة واختبارات الجهاز.
+- iOS يحتاج إعداد Bundle/Signing واختباراً على بيئة Apple.
+
+## التالي
+1. توليد Drift والاختبارات.
+2. بناء طبقة repositories/use-cases وربطها بالواجهات.
+3. إكمال الصلاة والقبلة والصلاحيات والإشعارات.
+4. بناء البحث المحلي.
+5. إضافة حزم محتوى موثقة ومرخصة.
+6. إكمال الصوت والتنزيلات.
+7. اختبار Android ثم iOS.
