@@ -12,7 +12,7 @@ class LocalSearchService {
     final query = SearchNormalizer.normalizeArabic(rawQuery).trim();
     if (query.isEmpty) return const [];
     final results = <LocalSearchResult>[];
-    final ayahs = await (db.select(db.quranAyahs)..where((t) => t.originalText.contains(query))..limit(30)).get();
+    final ayahs = await (db.select(db.quranAyahs)..where((t) => t.originalText.like('%$query%'))..limit(30)).get();
     results.addAll(ayahs.map((r) => LocalSearchResult(type: 'القرآن', id: r.id, title: 'القرآن • ' + r.surahNumber.toString() + ':' + r.ayahNumber.toString(), snippet: r.originalText)));
     final hadith = await (db.select(db.hadithEntries)..where((t) => t.originalText.contains(query))..limit(30)).get();
     results.addAll(hadith.map((r) => LocalSearchResult(type: 'الحديث', id: r.id, title: 'الحديث • ' + (r.number ?? ''), snippet: r.originalText)));
