@@ -25,6 +25,7 @@ dependencies:
   sensors_plus: ^7.1.0
   flutter_local_notifications: ^20.1.0
   just_audio: ^0.10.6
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:
