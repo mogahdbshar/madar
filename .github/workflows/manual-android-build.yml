@@ -23,8 +23,20 @@ jobs:
       - name: Generate Android platform scaffolding
         run: flutter create . --platforms=android --org com.madar --project-name madar
 
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Rasterize MADAR icon
+        run: magick assets/branding/madar_icon.svg -background none assets/branding/madar_icon.png
+
       - name: Flutter pub get
         run: flutter pub get
+
+      - name: Prepare verified Islamic content
+        run: dart run tool/prepare_content.dart
+
+      - name: Generate launcher icons
+        run: dart run flutter_launcher_icons
 
       - name: Generate Drift code
         run: dart run build_runner build --delete-conflicting-outputs
