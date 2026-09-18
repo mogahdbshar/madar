@@ -4,6 +4,8 @@ import 'package:crypto/crypto.dart';
 
 const quranUrl = 'https://raw.githubusercontent.com/Mushaf-Learning/quran-text/main/uthmani/quran-uthmani.txt';
 const metadataUrl = 'https://raw.githubusercontent.com/Mushaf-Learning/quran-text/main/metadata/surahs.json';
+const namesUrl = 'https://raw.githubusercontent.com/UmmahLibrary/ummah-library/12c9a9123c235a8dd1f2e8524e1f53716b62f7e2/packages/data/datasets/asma.json';
+const adhkarUrl = 'https://raw.githubusercontent.com/UmmahLibrary/ummah-library/12c9a9123c235a8dd1f2e8524e1f53716b62f7e2/packages/data/datasets/adhkar.json';
 
 Future<String> getUrl(String url) async {
   final client = HttpClient();
@@ -22,6 +24,8 @@ void main() async {
   await out.create(recursive: true);
   final quran = await getUrl(quranUrl);
   final metadata = jsonDecode(await getUrl(metadataUrl)) as List;
+  final namesPackage = jsonDecode(await getUrl(namesUrl)) as Map<String,dynamic>;
+  final adhkarPackage = jsonDecode(await getUrl(adhkarUrl)) as Map<String,dynamic>;
   final lines = quran.split(RegExp(r'\r?\n')).where((e) => e.trim().isNotEmpty).toList();
   final ayahs = <Map<String,dynamic>>[];
   for (final line in lines) {
@@ -42,7 +46,7 @@ void main() async {
     'revelationType': e['revelation_place'] ?? e['revelationPlace'],
   }).toList();
   final hash = sha256.convert(utf8.encode(quran)).toString();
-  final package = {'manifest': {'id':'madar-quran-core','version':'tanzil-1.1','schemaVersion':1,'sha256':hash,'license':'CC BY 3.0','source':'Tanzil Project — https://tanzil.net/'}, 'sources':[{'id':'tanzil-quran-v1.1','name':'Tanzil Quran Project','reference':'https://tanzil.net/download/','license':'CC BY 3.0','version':'1.1','verificationStatus':'verified'}], 'quranSurahs':surahs, 'quranAyahs':ayahs};
+  final package = {'manifest': {'id':'madar-quran-core','version':'tanzil-1.1','schemaVersion':1,'sha256':hash,'license':'CC BY 3.0','source':'Tanzil Project — https://tanzil.net/'}, 'sources':[{'id':'tanzil-quran-v1.1','name':'Tanzil Quran Project','reference':'https://tanzil.net/download/','license':'CC BY 3.0','version':'1.1','verificationStatus':'verified'}], 'quranSurahs':surahs, 'quranAyahs':ayahs,'namesOfAllah':names,'adhkar':adhkar};
   await File('assets/data/madar_quran_package.json').writeAsString(const JsonEncoder.withIndent('  ').convert(package));
   await File('assets/data/TANZIL_NOTICE.txt').writeAsString('Tanzil Quran Text\nCopyright (C) 2007-2021 Tanzil Project\nLicense: Creative Commons Attribution 3.0\nSource: https://tanzil.net/\n');
   stdout.writeln('MADAR Quran package generated: 6236 ayahs.');
