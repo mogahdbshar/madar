@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/repository_providers.dart';
+
 import '../../../core/design_system/madar_ui.dart';
 import '../domain/quran_models.dart';
 final quranAyahsProvider = FutureProvider.family<List<QuranAyah>, int>((ref, surah) => ref.watch(quranRepositoryProvider).getAyahs(surah));
