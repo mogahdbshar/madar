@@ -37,7 +37,7 @@ jobs:
           s=p.read_text()
           if 'android.permission.WAKE_LOCK' not in s:
               s=s.replace('<manifest ', '<manifest xmlns:tools="http://schemas.android.com/tools" ', 1)
-              s=s.replace('>\n', '>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>\n', 1)
+              s=s.replace('>\n', '>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n', 1)
           s=s.replace('android:name=".MainActivity"', 'android:name="com.ryanheise.audioservice.AudioServiceActivity"')
           service='''        <service android:name="com.ryanheise.audioservice.AudioService" android:foregroundServiceType="mediaPlayback" android:exported="true" tools:ignore="Instantiatable"><intent-filter><action android:name="android.media.browse.MediaBrowserService"/></intent-filter></service>
           <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver" android:exported="true" tools:ignore="Instantiatable"><intent-filter><action android:name="android.intent.action.MEDIA_BUTTON"/></intent-filter></receiver>
