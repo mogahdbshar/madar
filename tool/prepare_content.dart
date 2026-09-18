@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
-
 const quranUrl = 'https://raw.githubusercontent.com/Mushaf-Learning/quran-text/main/uthmani/quran-uthmani.txt';
 const metadataUrl = 'https://raw.githubusercontent.com/Mushaf-Learning/quran-text/main/metadata/surahs.json';
-const namesUrl = 'https://raw.githubusercontent.com/UmmahLibrary/ummah-library/12c9a9123c235a8dd1f2e8524e1f53716b62f7e2/packages/data/datasets/asma.json';
-const adhkarUrl = 'https://raw.githubusercontent.com/UmmahLibrary/ummah-library/12c9a9123c235a8dd1f2e8524e1f53716b62f7e2/packages/data/datasets/adhkar.json';
-
+const namesUrl = 'https://raw.githubusercontent.com/UmmahLibrary/ummah-library/main/packages/data/datasets/asma.json';
+const adhkarUrl = 'https://raw.githubusercontent.com/UmmahLibrary/ummah-library/main/packages/data/datasets/adhkar.json';
 Future<String> getUrl(String url) async {
   final client = HttpClient();
   try {
@@ -14,40 +12,38 @@ Future<String> getUrl(String url) async {
     request.headers.set(HttpHeaders.userAgentHeader, 'MADAR-content-builder/1.0');
     final response = await request.close();
     if (response.statusCode != 200) throw StateError('Download failed: ' + response.statusCode.toString());
-    final bytes = await response.fold<List<int>>(<int>[], (a,b) => a..addAll(b));
+    final bytes = await response.fold<List<int>>(<int>[], (a, b) => a..addAll(b));
     return utf8.decode(bytes);
   } finally { client.close(force: true); }
 }
-
 void main() async {
-  final out = Directory('assets/data');
-  await out.create(recursive: true);
+  final out = Directory('assets/data'); await out.create(recursive: true);
   final quran = await getUrl(quranUrl);
   final metadata = jsonDecode(await getUrl(metadataUrl)) as List;
-  final namesPackage = jsonDecode(await getUrl(namesUrl)) as Map<String,dynamic>;
-  final adhkarPackage = jsonDecode(await getUrl(adhkarUrl)) as Map<String,dynamic>;
+  final namesPackage = jsonDecode(await getUrl(namesUrl)) as Map<String, dynamic>;
+  final adhkarPackage = jsonDecode(await getUrl(adhkarUrl)) as Map<String, dynamic>;
+  final names = (namesPackage['names'] as List).map<Map<String, dynamic>>((e) => {'id': e['number'].toString(), 'arabicName': e['arabic'], 'meaning': e['meaning'], 'explanation': e['description'], 'sourceId': 'ummah-asma'}).toList();
+  final adhkar = (adhkarPackage['adhkar'] as List).map<Map<String, dynamic>>((e) => {'id': e['id'], 'category': (e['occasions'] as List).join(','), 'originalText': e['arabic'], 'count': e['repeat'], 'sourceId': 'ummah-adhkar', 'sourceReference': e['source']}).toList();
   final lines = quran.split(RegExp(r'\r?\n')).where((e) => e.trim().isNotEmpty).toList();
-  final ayahs = <Map<String,dynamic>>[];
+  final ayahs = <Map<String, dynamic>>[];
   for (final line in lines) {
-    final p = line.split('|');
-    if (p.length < 3) continue;
-    final s = int.tryParse(p[0].trim());
-    final a = int.tryParse(p[1].trim());
+    final p = line.split('|'); if (p.length < 3) continue;
+    final s = int.tryParse(p[0].trim()); final a = int.tryParse(p[1].trim());
     if (s == null || a == null) continue;
     ayahs.add({'id': '$s:$a', 'surahNumber': s, 'ayahNumber': a, 'text': p.sublist(2).join('|'), 'sourceId': 'tanzil-quran-v1.1'});
   }
   if (ayahs.length != 6236) throw StateError('Quran validation failed: ' + ayahs.length.toString());
   if (metadata.length != 114) throw StateError('Surah metadata validation failed.');
-  final surahs = metadata.map<Map<String,dynamic>>((e) => {
-    'number': e['number'] ?? e['id'],
-    'nameArabic': e['name_arabic'] ?? e['nameArabic'],
-    'nameLatin': e['name_transliteration'] ?? e['name_english'] ?? e['nameEnglish'] ?? '',
-    'ayahCount': e['ayah_count'] ?? e['ayahCount'],
-    'revelationType': e['revelation_place'] ?? e['revelationPlace'],
-  }).toList();
+  if (names.length != 99) throw StateError('Names of Allah validation failed: ' + names.length.toString());
+  if (adhkar.isEmpty) throw StateError('Adhkar validation failed.');
+  final surahs = metadata.map<Map<String, dynamic>>((e) => {'number': e['number'] ?? e['id'], 'nameArabic': e['name_arabic'] ?? e['nameArabic'], 'nameLatin': e['name_transliteration'] ?? e['name_english'] ?? e['nameEnglish'] ?? '', 'ayahCount': e['ayah_count'] ?? e['ayahCount'], 'revelationType': e['revelation_place'] ?? e['revelationPlace']}).toList();
   final hash = sha256.convert(utf8.encode(quran)).toString();
-  final package = {'manifest': {'id':'madar-quran-core','version':'tanzil-1.1','schemaVersion':1,'sha256':hash,'license':'CC BY 3.0','source':'Tanzil Project — https://tanzil.net/'}, 'sources':[{'id':'tanzil-quran-v1.1','name':'Tanzil Quran Project','reference':'https://tanzil.net/download/','license':'CC BY 3.0','version':'1.1','verificationStatus':'verified'}], 'quranSurahs':surahs, 'quranAyahs':ayahs,'namesOfAllah':names,'adhkar':adhkar};
+  final package = {'manifest': {'id': 'madar-quran-core', 'version': 'tanzil-1.1', 'schemaVersion': 1, 'sha256': hash, 'license': 'CC BY 3.0', 'source': 'Tanzil Project — https://tanzil.net/'}, 'sources': [
+    {'id': 'tanzil-quran-v1.1', 'name': 'Tanzil Quran Project', 'reference': 'https://tanzil.net/download/', 'license': 'CC BY 3.0', 'version': '1.1', 'verificationStatus': 'verified'},
+    {'id': 'ummah-asma', 'name': 'UmmahLibrary Names of Allah', 'reference': 'https://github.com/UmmahLibrary/ummah-library', 'license': 'Apache-2.0', 'version': namesPackage['version'].toString(), 'verificationStatus': 'source-pinned'},
+    {'id': 'ummah-adhkar', 'name': 'UmmahLibrary Adhkar', 'reference': 'https://github.com/UmmahLibrary/ummah-library', 'license': 'MIT', 'version': adhkarPackage['version'].toString(), 'verificationStatus': 'source-pinned'},
+  ], 'quranSurahs': surahs, 'quranAyahs': ayahs, 'namesOfAllah': names, 'adhkar': adhkar};
   await File('assets/data/madar_quran_package.json').writeAsString(const JsonEncoder.withIndent('  ').convert(package));
   await File('assets/data/TANZIL_NOTICE.txt').writeAsString('Tanzil Quran Text\nCopyright (C) 2007-2021 Tanzil Project\nLicense: Creative Commons Attribution 3.0\nSource: https://tanzil.net/\n');
-  stdout.writeln('MADAR Quran package generated: 6236 ayahs.');
+  stdout.writeln('MADAR content package generated.');
 }
