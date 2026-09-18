@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/quran/presentation/quran_page.dart';
+import '../../features/quran/presentation/quran_reader_page.dart';
 import '../../features/hadith/presentation/hadith_page.dart';
 import '../../features/adhkar/presentation/adhkar_page.dart';
 import '../../features/worship_tracking/presentation/worship_tracking_page.dart';
@@ -24,7 +25,7 @@ final appRouterProvider = Provider<GoRouter>((ref) => GoRouter(
       builder: (_, __, child) => MadarShell(child: child),
       routes: [
         GoRoute(path: '/', builder: (_, __) => const HomePage()),
-        GoRoute(path: '/quran', builder: (_, __) => const QuranPage()),
+        GoRoute(path: '/quran', builder: (_, __) => const QuranPage(), routes: [GoRoute(path: 'surah/:number', builder: (_, state) => QuranReaderPage(surahNumber: int.parse(state.pathParameters['number']!)))]),
         GoRoute(path: '/hadith', builder: (_, __) => const HadithPage()),
         GoRoute(path: '/adhkar', builder: (_, __) => const AdhkarPage()),
         GoRoute(path: '/worship', builder: (_, __) => const WorshipTrackingPage()),
