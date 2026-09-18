@@ -3,43 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/repository_providers.dart';
 import '../../../core/design_system/madar_ui.dart';
 import '../domain/worship_models.dart';
-
-class WorshipTrackingPage extends ConsumerStatefulWidget {
-  const WorshipTrackingPage({super.key});
-  @override ConsumerState<WorshipTrackingPage> createState() => _State();
-}
-class _State extends ConsumerState<WorshipTrackingPage> {
-  late Future<List<WorshipEntry>> future;
-  @override void initState() { super.initState(); _reload(); }
-  void _reload() { future = ref.read(worshipRepositoryProvider).forDate(DateTime.now()); }
-  @override Widget build(BuildContext context) => MadarPage(title: 'متابعة العبادة', child: FutureBuilder<List<WorshipEntry>>(
-    future: future,
-    builder: (context, snapshot) {
-      if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-      final done = {for (final item in snapshot.data!) item.type: item.completed};
-      return ListView(padding: const EdgeInsets.all(18), children: [
-        const MadarGlassCard(child: Text('تتبع يومي هادئ، بدون نقاط أو منافسة.')),
-        const SizedBox(height: 16),
-        for (final type in WorshipType.values)
-          SwitchListTile(
-            title: Text(_label(type)),
-            value: done[type] ?? false,
-            onChanged: (value) async {
-              final now = DateTime.now();
-              await ref.read(worshipRepositoryProvider).save(WorshipEntry(
-                id: type.name + ':' + now.year.toString() + '-' + now.month.toString() + '-' + now.day.toString(),
-                type: type, date: now, completed: value,
-              ));
-              setState(_reload);
-            },
-          ),
-      ]);
-    },
-  ));
-  String _label(WorshipType type) => switch (type) {
-    WorshipType.prayer => 'الصلاة',
-    WorshipType.quran => 'القرآن',
-    WorshipType.adhkar => 'الأذكار',
-    WorshipType.tasbeeh => 'التسبيح',
-  };
-}
+class WorshipTrackingPage extends ConsumerStatefulWidget{const WorshipTrackingPage({super.key});@override ConsumerState<WorshipTrackingPage> createState()=>_State();}
+class _State extends ConsumerState<WorshipTrackingPage>{
+ final Map<String,bool> done={'الفجر':false,'الظهر':false,'العصر':false,'المغرب':false,'العشاء':false,'القرآن':false,'الأذكار':false};
+ @override Widget build(BuildContext c)=>MadarPage(title:'متابعة العبادة',child:ListView(padding:const EdgeInsets.all(18),children:[
+ const MadarGlassCard(child:Text('سجل عبادتك لنفسك. لا توجد نقاط أو منافسة.')),const SizedBox(height:16),
+ ...done.keys.map((k)=>MadarGlassCard(child:CheckboxListTile(value:done[k],onChanged:(v)async{final value=v??false;setState(()=>done[k]=value);await ref.read(worshipRepositoryProvider).save(WorshipEntry(id:k+'_'+DateTime.now().millisecondsSinceEpoch.toString(),type:k,date:DateTime.now(),completed:value));},title:Text(k),controlAffinity:ListTileControlAffinity.leading)))
+ ]));}
