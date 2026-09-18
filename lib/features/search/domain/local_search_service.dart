@@ -4,7 +4,7 @@ class LocalSearchResult{const LocalSearchResult({required this.type,required thi
 class LocalSearchService{
  LocalSearchService(this.db);final AppDatabase db;
  Future<List<LocalSearchResult>> search(String rawQuery)async{
-  final query=SearchNormalizer.normalize(rawQuery).trim();if(query.isEmpty)return const [];
+  final query=SearchNormalizer.normalizeArabic(rawQuery).trim();if(query.isEmpty)return const [];
   final results=<LocalSearchResult>[];
   final ayahs=await(db.select(db.quranAyahs)..where((t)=>t.originalText.contains(query))..limit(30)).get();
   results.addAll(ayahs.map((r)=>LocalSearchResult(type:'القرآن',id:r.id,title:'القرآن • '+r.surahNumber.toString()+':'+r.ayahNumber.toString(),snippet:r.originalText)));
