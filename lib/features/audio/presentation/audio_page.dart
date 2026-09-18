@@ -1,3 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/design_system/madar_ui.dart';
-class AudioPage extends StatelessWidget{const AudioPage({super.key});@override Widget build(BuildContext c)=>MadarPage(title:'الصوت',child:ListView(padding:const EdgeInsets.all(18),children:[const MadarGlassCard(child:ListTile(leading:Icon(Icons.headphones_rounded),title:Text('المشغل'),subtitle:Text('الخلفية والتحكم والسرعة والتكرار والمؤقت'))),const SizedBox(height:18),MadarFeatureTile(icon:Icons.playlist_play_rounded,title:'قوائم التشغيل',subtitle:'تنظيم المواد الصوتية الموثقة',onTap:(){}),const SizedBox(height:10),MadarFeatureTile(icon:Icons.download_for_offline_rounded,title:'التنزيلات',subtitle:'ملفات اختيارية لتقليل حجم التطبيق',onTap:(){})]));}}
+import '../data/audio_providers.dart';
+class AudioPage extends ConsumerWidget{
+ const AudioPage({super.key});
+ @override Widget build(BuildContext context,WidgetRef ref)=>MadarPage(title:'الصوت',child:FutureBuilder(
+  future:ref.read(audioRepositoryProvider).getTracks(),
+  builder:(c,s){if(!s.hasData)return const Center(child:CircularProgressIndicator());final items=s.data!;
+   return ListView(padding:const EdgeInsets.all(18),children:[
+    const MadarGlassCard(child:Text('مشغل الصوت يعتمد على الملفات الموثقة المثبتة أو التي ينزلها المستخدم اختيارياً.')),
+    const SizedBox(height:16),
+    if(items.isEmpty)const Text('لا توجد ملفات صوتية موثقة مثبتة حالياً.')
+    else ...items.map((t)=>Card(child:ListTile(leading:const Icon(Icons.play_circle_outline_rounded),title:Text(t.title),subtitle:Text('المصدر: '+t.source),onTap:()=>ref.read(madarAudioServiceProvider).play(t))))
+   ]);
+  }));
+}
