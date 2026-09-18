@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/repository_providers.dart';
 import '../../../core/design_system/madar_ui.dart';
@@ -13,7 +14,7 @@ class QuranPage extends ConsumerWidget{
    error:(e,_)=>Text('تعذر تحميل السور: '+e.toString()),
    data:(items)=>items.isEmpty?const Text('لا توجد حزمة قرآن محلية مثبتة بعد.'):Column(children:items.map((s)=>ListTile(
     leading:CircleAvatar(child:Text(s.number.toString())),title:Text(s.nameArabic),subtitle:Text(s.nameLatin+' • '+s.ayahCount.toString()+' آية'),
-    onTap:()=>ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text('فتح سورة '+s.nameArabic+' سيُربط بقارئ الآيات في الدفعة التالية.')))
+    onTap:()=>context.push('/quran/surah/'+s.number.toString())
    )).toList())
   ))
  ]));
