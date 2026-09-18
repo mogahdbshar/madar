@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:drift/drift.dart';
 import '../../../core/database/app_database.dart';
 
 class HadithDownloadService {
@@ -86,7 +87,7 @@ class HadithDownloadService {
             HadithEntriesCompanion.insert(
               id:id, collectionId:collection, book:Value(book), chapter:Value(book),
               number:Value(h['id']?.toString()), originalText:h['arabic']?.toString() ?? '',
-              narrator:Value(null), sourceId:'hadith-mit-' + collection,
+              narrator:const Value<String?>(null), sourceId:'hadith-mit-' + collection,
             ),
           );
           if (grade != null && grade.isNotEmpty) {
