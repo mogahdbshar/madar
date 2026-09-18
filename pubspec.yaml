@@ -19,6 +19,7 @@ dependencies:
   path: ^1.9.1
   intl: ^0.20.2
   equatable: ^2.0.7
+  crypto: ^3.0.6
   geolocator: ^14.0.3
   permission_handler: ^13.0.2
   sensors_plus: ^7.1.0
